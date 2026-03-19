@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Energy</title>
+
+    <link rel="dns-prefetch" href="https://your-energy.b.goit.study" />
+    <link rel="preconnect" href="https://your-energy.b.goit.study" crossorigin />
+
+    <link rel="stylesheet" href="./css/styles.css" />
+
+    <script type="module" crossorigin src="/cursova-your-energy/assets/index-CM7S4oCT.js"></script>
+    <link rel="stylesheet" crossorigin href="/cursova-your-energy/assets/index-D_nxXpU-.css">
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="container header__container">
+        <a href="/" class="header__logo">YourEnergy</a>
+
+        <nav class="header__nav">
+          <ul class="header__menu">
+            <li><a href="/" class="header__link">Home</a></li>
+            <li><a href="/favorites.html" class="header__link">Favorites</a></li>
+          </ul>
+        </nav>
+
+        <ul class="header__socials">
+          <li>
+            <a href="https://www.facebook.com/goITclub/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg width="20" height="20"><use href="#icon-facebook"></use></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/goitclub/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg width="20" height="20"><use href="#icon-instagram"></use></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/c/GoIT" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <svg width="20" height="20"><use href="#icon-youtube"></use></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="page">
+      <div class="container">
+
+        <!-- ЦИТАТА -->
+        <section class="quote" style="margin-bottom:20px;">
+          <p class="quote__text">Loading...</p>
+          <p class="quote__author"></p>
+        </section>
+
+        <!-- ФІЛЬТРИ -->
+        <div class="filters__tabs">
+          <button data-filter="muscles" class="is-active">Muscles</button>
+          <button data-filter="bodyparts">Body parts</button>
+          <button data-filter="equipment">Equipment</button>
+        </div>
+
+        <!-- ПОШУК -->
+        <form id="search-form" style="margin: 15px 0;">
+          <input type="text" id="search-input" placeholder="Search..." />
+          <button type="submit">Search</button>
+        </form>
+
+        <!-- СПИСОК -->
+        <ul id="exercises-container"></ul>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container footer__container">
+        <a href="/" class="footer__logo">YourEnergy</a>
+
+        <ul class="footer__socials">
+          <li>
+            <a href="https://www.facebook.com/goITclub/" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20"><use href="#icon-facebook"></use></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/goitclub/" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20"><use href="#icon-instagram"></use></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/c/GoIT" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20"><use href="#icon-youtube"></use></svg>
+            </a>
+          </li>
+        </ul>
+
+        <p class="footer__text">
+          Transform your body and mind with daily workouts 💪
+        </p>
+
+        <form class="footer__form">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            required
+            pattern="^\w+(\.\w+)?@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
+          />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </footer>
+
+    <!-- SVG -->
+    <svg style="display:none">
+      <symbol id="icon-facebook" viewBox="0 0 24 24">
+        <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2.3v-2.9h2.3V9.8c0-2.3 1.4-3.6 3.5-3.6 1 0 2 .2 2 .2v2.2h-1.1c-1.1 0-1.5.7-1.5 1.4v1.7h2.6l-.4 2.9h-2.2v7A10 10 0 0 0 22 12z"/>
+      </symbol>
+      <symbol id="icon-instagram" viewBox="0 0 24 24">
+        <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7z"/>
+      </symbol>
+      <symbol id="icon-youtube" viewBox="0 0 24 24">
+        <path d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.8-1.7-.8-2.1-.9z"/>
+      </symbol>
+    </svg>
+
+    <!-- JS -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('[data-filter]');
+        const listEl = document.getElementById('exercises-container');
+        const form = document.getElementById('search-form');
+        const input = document.getElementById('search-input');
+
+        let currentFilter = 'muscles';
+        let currentQuery = '';
+
+        async function loadFilters(filter, query = '') {
+          try {
+            const res = await fetch(
+              `https://your-energy.b.goit.study/api/filters?filter=${filter}`
+            );
+            const data = await res.json();
+
+            let results = data.results;
+
+            if (query) {
+              results = results.filter(item =>
+                item.name.toLowerCase().includes(query.toLowerCase())
+              );
+            }
+
+            const markup = results
+              .map(
+                item => `
+                <li class="filters__item">
+                  <img src="${item.imgURL}" alt="${item.name}" />
+                  <h3>${item.name}</h3>
+                  <p>${item.filter}</p>
+
+                  <button class="add-favorite-btn" data-id="${item._id}">
+                    ⭐ Add
+                  </button>
+                </li>
+              `
+              )
+              .join('');
+
+            listEl.innerHTML = markup;
+
+            document.querySelectorAll('.add-favorite-btn').forEach(btn => {
+              btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+
+                const selected = results.find(item => String(item._id) === String(id));
+                if (!selected) return;
+
+                addToFavorites(selected);
+              });
+            });
+
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        async function loadQuote() {
+          try {
+            const res = await fetch('https://your-energy.b.goit.study/api/quote');
+            const data = await res.json();
+
+            const extraQuotes = [
+              { quote: 'No pain, no gain.', author: 'Gym Rule' },
+              { quote: 'Push yourself because no one else will.', author: 'Unknown' },
+              { quote: 'Success starts with self-discipline.', author: 'Unknown' },
+              { quote: 'Train hard or go home.', author: 'Coach' }
+            ];
+
+            const allQuotes = [data, ...extraQuotes];
+            const random = allQuotes[Math.floor(Math.random() * allQuotes.length)];
+
+            document.querySelector('.quote__text').textContent = random.quote;
+            document.querySelector('.quote__author').textContent = random.author;
+
+          } catch {
+            document.querySelector('.quote__text').textContent = 'Stay strong 💪';
+            document.querySelector('.quote__author').textContent = '';
+          }
+        }
+
+        const STORAGE_KEY = 'your-energy-favorites';
+
+        function getFavorites() {
+          try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+          } catch {
+            return [];
+          }
+        }
+
+        function saveFavorites(data) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function addToFavorites(exercise) {
+          const favorites = getFavorites();
+
+          const exists = favorites.some(item => String(item._id) === String(exercise._id));
+          if (exists) return;
+
+          favorites.push(exercise);
+          saveFavorites(favorites);
+
+          alert('Added to favorites ⭐');
+        }
+
+        tabs.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabs.forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+
+            currentFilter = btn.dataset.filter;
+            loadFilters(currentFilter, currentQuery);
+          });
+        });
+
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          currentQuery = input.value.trim();
+          loadFilters(currentFilter, currentQuery);
+        });
+
+        loadFilters('muscles');
+        loadQuote();
+      });
+    </script>
+
+  </body>
+</html>
