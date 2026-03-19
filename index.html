@@ -162,18 +162,33 @@
                   <img src="${item.imgURL}" alt="${item.name}" />
                   <h3>${item.name}</h3>
                   <p>${item.filter}</p>
+
+                  <button class="add-favorite-btn" data-id="${item._id}">
+                    ⭐ Add
+                  </button>
                 </li>
               `
               )
               .join('');
 
             listEl.innerHTML = markup;
+
+            document.querySelectorAll('.add-favorite-btn').forEach(btn => {
+              btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+
+                const selected = results.find(item => String(item._id) === String(id));
+                if (!selected) return;
+
+                addToFavorites(selected);
+              });
+            });
+
           } catch (e) {
             console.error(e);
           }
         }
 
-        // 🔥 ВИПРАВЛЕНА ЦИТАТА (РАНДОМ)
         async function loadQuote() {
           try {
             const res = await fetch('https://your-energy.b.goit.study/api/quote');
@@ -196,6 +211,32 @@
             document.querySelector('.quote__text').textContent = 'Stay strong 💪';
             document.querySelector('.quote__author').textContent = '';
           }
+        }
+
+        const STORAGE_KEY = 'your-energy-favorites';
+
+        function getFavorites() {
+          try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+          } catch {
+            return [];
+          }
+        }
+
+        function saveFavorites(data) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function addToFavorites(exercise) {
+          const favorites = getFavorites();
+
+          const exists = favorites.some(item => String(item._id) === String(exercise._id));
+          if (exists) return;
+
+          favorites.push(exercise);
+          saveFavorites(favorites);
+
+          alert('Added to favorites ⭐');
         }
 
         tabs.forEach(btn => {
