@@ -1,0 +1,72 @@
+/* контейнер */
+#exercises-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* карточка */
+  .filters__item {
+    list-style: none;
+    background: #111;
+    color: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 12px;
+    transition: 0.2s;
+  }
+  
+  /* hover ефект */
+  .filters__item:hover {
+    transform: scale(1.03);
+  }
+  
+  /* картинка */
+  .filters__item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  /* заголовок */
+  .filters__item h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+  
+  /* підпис */
+  .filters__item p {
+    font-size: 12px;
+    opacity: 0.6;
+  }
+  
+  /* кнопки зверху */
+  .filters__tabs {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+  }
+  
+  .filters__tabs button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #ddd;
+    cursor: pointer;
+  }
+  
+  .filters__tabs button:hover {
+    background: #bbb;
+  }
+
+  .filters__tabs button {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .filters__tabs .is-active {
+    background: black;
+    color: white;
+  }
